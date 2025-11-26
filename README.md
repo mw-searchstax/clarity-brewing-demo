@@ -20,7 +20,7 @@ This is a fictional non-alcoholic brewery website designed to exercise ~80% of S
 - **Search profiles** for different sections
 - **Geo search** for store locator
 
-## Current Status: Phase 4 Complete ✅
+## Current Status: Phase 5 Complete ✅
 
 ### What's Built
 
@@ -125,26 +125,43 @@ See `docs/plans/2025-11-26-phase4-content-expansion-design.md` for design detail
 
 ---
 
-## Phase 5: Ingest API Scripts
+## Phase 5: Ingest API Scripts ✅
 
-Add Python scripts for supplemental data (locations not on website):
+Python scripts for ingesting supplemental data (locations/inventory) via SearchStax Ingest API.
+
+### Structure
 
 ```
 scripts/
 ├── ingest_locations.py   # Taproom locations (geo search)
-├── ingest_inventory.py   # Product availability
+├── ingest_inventory.py   # Product stock by location
+├── requirements.txt      # requests, pydantic, python-dotenv
+├── README.md            # Setup and usage instructions
+├── data/
+│   ├── locations.csv    # 5 taproom locations
+│   └── inventory.csv    # 65 inventory records
 └── shared/
-    ├── config.py
-    ├── batch_accumulator.py
-    └── retry_handler.py
+    ├── config.py        # Environment variable loading
+    ├── models.py        # Pydantic models (Location, InventoryItem)
+    ├── batch.py         # Size-based batching (1800KB target)
+    └── client.py        # API client with retry logic
 ```
 
-### Key Patterns
+### Features
 
-1. **Stable IDs**: `type:slug` pattern (e.g., `location:taproom-austin`)
-2. **Size-based batching**: ~1800KB target per request (2048KB limit)
-3. **Retry with backoff**: Exponential delay + jitter for 429/5xx
-4. **Environment config**: `STAGING_` prefix for non-prod
+- **Stable IDs**: `type:slug` pattern (e.g., `location:taproom-austin`, `inventory:taproom-austin:hop-forward-ipa`)
+- **Validation**: Pydantic models ensure data quality before sending
+- **Size-based batching**: Splits large payloads to stay under 2048KB API limit
+- **Retry logic**: Exponential backoff + jitter for 429/5xx errors
+- **Dry-run mode**: Test validation without making API calls
+
+### Sample Data
+
+- **5 locations**: Austin, Denver, Seattle, Portland, San Diego
+- **65 inventory records**: 5 locations × 13 products
+- Some items marked out-of-stock to test faceting
+
+See `scripts/README.md` for setup and usage instructions.
 
 ---
 

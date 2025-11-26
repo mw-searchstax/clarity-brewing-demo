@@ -4,11 +4,16 @@ Python scripts for ingesting supplemental data to SearchStax Site Search.
 
 ## Setup
 
-1. Install dependencies:
+1. Create a virtual environment and install dependencies:
 
 ```bash
+cd scripts
+python3 -m venv venv
+source venv/bin/activate
 pip install -r requirements.txt
 ```
+
+Note: On macOS, a virtual environment is required due to PEP 668.
 
 2. Add read-write credentials to `.env` (in project root):
 
@@ -26,6 +31,9 @@ Get the token from: SearchStax Dashboard → App Settings → All APIs → Searc
 Ingests taproom locations for geo search.
 
 ```bash
+# Activate venv first
+source venv/bin/activate
+
 # Dry run (validate only)
 python ingest_locations.py --dry-run
 

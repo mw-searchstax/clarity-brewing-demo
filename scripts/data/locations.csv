@@ -1,0 +1,6 @@
+slug,name,address,city,state,zip,lat,lng,phone,hours
+taproom-austin,Clarity Brewing - Austin,123 Main St,Austin,TX,78701,30.2672,-97.7431,512-555-0100,"Mon-Sat 11am-10pm, Sun 12pm-8pm"
+taproom-denver,Clarity Brewing - Denver,456 Market St,Denver,CO,80202,39.7392,-104.9903,303-555-0200,Mon-Sun 11am-11pm
+taproom-seattle,Clarity Brewing - Seattle,789 Pike St,Seattle,WA,98101,47.6062,-122.3321,206-555-0300,Mon-Sat 12pm-10pm
+taproom-portland,Clarity Brewing - Portland,321 Oak Ave,Portland,OR,97204,45.5152,-122.6784,503-555-0400,Tue-Sun 11am-9pm
+taproom-san-diego,Clarity Brewing - San Diego,654 Harbor Dr,San Diego,CA,92101,32.7157,-117.1611,619-555-0500,Mon-Sun 10am-10pm

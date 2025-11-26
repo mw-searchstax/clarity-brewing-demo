@@ -60,18 +60,26 @@ const trackKey = import.meta.env.PUBLIC_SEARCHSTAX_TRACK_KEY;
   }
 </style>
 
-<link rel="stylesheet" href="https://static.searchstax.com/studio-js/v4/css/search-ux.css" />
+<link rel="stylesheet" href="/searchstax.css" />
 
-<script is:inline define:vars={{ searchURL, suggestURL, token, trackKey }}>
-  function initSearchStax() {
-    if (!searchURL) {
-      console.error('SearchStax: Missing configuration. Set PUBLIC_SEARCHSTAX_* env variables.');
-      document.getElementById('searchstax-input-container').innerHTML =
-        '<p style="color: #666; padding: 1rem;">Search is being configured...</p>';
-      return;
+<script>
+  import { Searchstax } from '@searchstax-inc/searchstudio-ux-js';
+
+  const searchURL = import.meta.env.PUBLIC_SEARCHSTAX_SEARCH_URL;
+  const suggestURL = import.meta.env.PUBLIC_SEARCHSTAX_SUGGEST_URL;
+  const token = import.meta.env.PUBLIC_SEARCHSTAX_TOKEN;
+  const trackKey = import.meta.env.PUBLIC_SEARCHSTAX_TRACK_KEY;
+
+  if (!searchURL) {
+    console.error('SearchStax: Missing configuration. Set PUBLIC_SEARCHSTAX_* env variables.');
+    const container = document.getElementById('searchstax-input-container');
+    if (container) {
+      container.innerHTML = '<p style="color: #666; padding: 1rem;">Search is being configured...</p>';
     }
+  } else {
+    const searchstax = new Searchstax();
 
-    const searchstax = new SearchstaxSDK({
+    searchstax.initialize({
       searchURL: searchURL,
       suggesterURL: suggestURL,
       searchAuth: token,
@@ -80,36 +88,16 @@ const trackKey = import.meta.env.PUBLIC_SEARCHSTAX_TRACK_KEY;
       language: 'en'
     });
 
-    searchstax.initialize();
-
-    searchstax.renderInputWidget({
-      containerSelector: '#searchstax-input-container',
+    searchstax.addSearchInputWidget('searchstax-input-container', {
       placeholder: 'Search beers, articles, events...'
     });
 
-    searchstax.renderResultsWidget({
-      containerSelector: '#searchstax-results-container'
-    });
+    searchstax.addSearchResultsWidget('searchstax-results-container', {});
 
-    searchstax.renderFacetsWidget({
-      containerSelector: '#searchstax-facets-container'
-    });
+    searchstax.addFacetsWidget('searchstax-facets-container', {});
 
-    searchstax.renderPaginationWidget({
-      containerSelector: '#searchstax-pagination-container'
-    });
+    searchstax.addPaginationWidget('searchstax-pagination-container', {});
 
-    searchstax.renderSortingWidget({
-      containerSelector: '#searchstax-sorting-container'
-    });
+    searchstax.addSearchSortingWidget('searchstax-sorting-container', {});
   }
-
-  // Load SDK script dynamically to ensure proper ordering
-  const script = document.createElement('script');
-  script.src = 'https://static.searchstax.com/studio-js/v4/js/search-ux.js';
-  script.onload = initSearchStax;
-  script.onerror = function() {
-    console.error('Failed to load SearchStax SDK');
-  };
-  document.head.appendChild(script);
 </script>

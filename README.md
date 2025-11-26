@@ -77,6 +77,50 @@ PUBLIC_SEARCHSTAX_TRACK_KEY=your-tracking-key
 - [x] Add more articles (8 new articles, total 13)
 - [x] Add more events (8 new events, total 11)
 
+### New Products
+| Beer | Style | Edge Case |
+|------|-------|-----------|
+| Classic Pilsner | Pilsner | New style |
+| Dark Roast Porter | Porter | New style, long content |
+| Session Pale | Pale Ale | Very short content (~50 words) |
+| Oktoberfest Märzen | Amber | Seasonal, `available: false` |
+| Breakfast Stout | Stout | Premium price ($18.99) |
+| Citrus Radler | Wheat | Low ABV (0.3%), budget price |
+| Double Dry-Hopped IPA | IPA | Extra long content, awards |
+| Belgian Tripel | Pale Ale | Complex fermentation |
+
+### New Articles
+| Article | Category | Edge Case |
+|---------|----------|-----------|
+| Quick Serving Tips | Food & Pairing | Very short (~150 words) |
+| Complete Guide to Beer Styles | Brewing Process | Extra long (~2500 words) |
+| NA Beer Myths Debunked | Health & Wellness | Listicle format |
+| Beer Can Chicken Recipe | Recipes | Recipe with steps |
+| Seattle Taproom Announcement | News & Updates | Short announcement |
+| Hop Varieties Explained | Brewing Process | Long reference content |
+| Holiday Gift Guide | News & Updates | Seasonal content |
+| Brewmaster Interview | News & Updates | Q&A format |
+
+### New Events
+| Event | Type | Edge Case |
+|-------|------|-----------|
+| Weekly Brewery Tour | Tour | New type |
+| Stout Tasting Night | Tasting | New type |
+| Seattle Grand Opening | Release Party | Far future, free |
+| Summer Beer Festival | Festival | Multi-day, 500 capacity |
+| Brewing 101 Workshop | Workshop | Free (`price: 0`) |
+| Hop Harvest Tour | Tour | Past event |
+| New Year's Eve Party | Festival | Premium ($100) |
+| Porter & Chocolate Pairing | Tasting | Valentine's theme |
+
+### Search Feature Coverage
+- All 8 product styles now have items
+- All 5 article categories populated
+- All 5 event types populated
+- Content length range: 50 words to 2500+ words
+- Price range: $0 (free) to $100
+- Dates: past events to 6+ months future
+
 See `docs/plans/2025-11-26-phase4-content-expansion-design.md` for design details.
 
 ---

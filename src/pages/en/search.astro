@@ -1,0 +1,145 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Search" description="Search across all Clarity Brewing content - beers, articles, events, and locations.">
+  <h1>Search</h1>
+  <p class="page-intro">
+    Search across all our content - beers, articles, events, and locations.
+  </p>
+
+  <div class="search-placeholder">
+    <div class="placeholder-icon">🔍</div>
+    <h2>SearchStax Integration Coming Soon</h2>
+    <p>
+      This page will feature the SearchStax Site Search UI Kit with:
+    </p>
+    <ul>
+      <li>Full-text search across all content</li>
+      <li>Faceted filtering by content type, category, and more</li>
+      <li>Auto-suggest as you type</li>
+      <li>Smart Answers for question-style queries</li>
+      <li>Multi-language support</li>
+    </ul>
+    <p class="placeholder-note">
+      <strong>Phase 2</strong> will add the React-based search interface using
+      <code>@searchstax-inc/searchstudio-ux-react</code>.
+    </p>
+  </div>
+
+  <div class="manual-browse">
+    <h3>Browse Content</h3>
+    <div class="browse-links">
+      <a href="/en/products/" class="browse-link">
+        <span class="browse-icon">🍺</span>
+        <span>Our Beers</span>
+      </a>
+      <a href="/en/articles/" class="browse-link">
+        <span class="browse-icon">📚</span>
+        <span>Articles</span>
+      </a>
+      <a href="/en/events/" class="browse-link">
+        <span class="browse-icon">📅</span>
+        <span>Events</span>
+      </a>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-intro {
+    font-size: 1.125rem;
+    color: var(--color-text-light);
+    margin-bottom: 2rem;
+  }
+
+  .search-placeholder {
+    background: white;
+    border: 2px dashed var(--color-border);
+    border-radius: 12px;
+    padding: 3rem;
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .placeholder-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .search-placeholder h2 {
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+  }
+
+  .search-placeholder ul {
+    text-align: left;
+    max-width: 400px;
+    margin: 1rem auto;
+  }
+
+  .search-placeholder li {
+    margin-bottom: 0.5rem;
+  }
+
+  .placeholder-note {
+    margin-top: 1.5rem;
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+  }
+
+  .placeholder-note code {
+    background: var(--color-background);
+    padding: 0.125rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8125rem;
+  }
+
+  .manual-browse h3 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: var(--color-text-light);
+  }
+
+  .browse-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+  }
+
+  .browse-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1.5rem 2rem;
+    background: white;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--color-text);
+    transition: all 0.2s;
+  }
+
+  .browse-link:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+    text-decoration: none;
+  }
+
+  .browse-icon {
+    font-size: 2rem;
+  }
+
+  @media (max-width: 600px) {
+    .browse-links {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .browse-link {
+      width: 100%;
+      max-width: 250px;
+    }
+  }
+</style>

@@ -1,0 +1,270 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const products = await getCollection('products');
+const articles = await getCollection('articles');
+const events = await getCollection('events');
+
+// Get featured items
+const featuredProducts = products.slice(0, 3);
+const latestArticles = articles
+  .sort((a, b) => b.data.publish_date.getTime() - a.data.publish_date.getTime())
+  .slice(0, 2);
+const upcomingEvents = events
+  .filter(e => e.data.event_date > new Date())
+  .sort((a, b) => a.data.event_date.getTime() - b.data.event_date.getTime())
+  .slice(0, 2);
+---
+
+<BaseLayout title="Home">
+  <section class="hero">
+    <h1>Great Beer, Clear Mind</h1>
+    <p class="hero-subtitle">
+      Premium non-alcoholic craft beers, brewed with passion in Austin, Texas.
+      All the flavor, none of the alcohol.
+    </p>
+    <div class="hero-actions">
+      <a href="/en/products/" class="btn btn-primary">Explore Our Beers</a>
+      <a href="/en/search/" class="btn btn-secondary">Search</a>
+    </div>
+  </section>
+
+  <section class="featured-section">
+    <h2>Our Beers</h2>
+    <div class="card-grid">
+      {featuredProducts.map(product => (
+        <article class="card product-card">
+          <div class="card-badge">{product.data.style}</div>
+          <h3><a href={`/en/products/${product.slug}/`}>{product.data.title}</a></h3>
+          <p class="card-meta">
+            <span>{product.data.abv}% ABV</span>
+            <span>•</span>
+            <span>{product.data.calories} cal</span>
+            <span>•</span>
+            <span class="price">${product.data.price}</span>
+          </p>
+          <p>{product.data.description}</p>
+          <div class="card-tags">
+            {product.data.flavor_profile.map(flavor => (
+              <span class="tag">{flavor}</span>
+            ))}
+          </div>
+        </article>
+      ))}
+    </div>
+    <p class="section-link">
+      <a href="/en/products/">View all {products.length} beers →</a>
+    </p>
+  </section>
+
+  <section class="featured-section">
+    <h2>Learn About NA Beer</h2>
+    <div class="card-grid card-grid-2">
+      {latestArticles.map(article => (
+        <article class="card article-card">
+          <div class="card-badge">{article.data.category}</div>
+          <h3><a href={`/en/articles/${article.slug}/`}>{article.data.title}</a></h3>
+          <p class="card-meta">
+            <span>{article.data.author}</span>
+            <span>•</span>
+            <span>{article.data.reading_time} min read</span>
+          </p>
+          <p>{article.data.description}</p>
+        </article>
+      ))}
+    </div>
+    <p class="section-link">
+      <a href="/en/articles/">View all {articles.length} articles →</a>
+    </p>
+  </section>
+
+  {upcomingEvents.length > 0 && (
+    <section class="featured-section">
+      <h2>Upcoming Events</h2>
+      <div class="card-grid card-grid-2">
+        {upcomingEvents.map(event => (
+          <article class="card event-card">
+            <div class="card-badge">{event.data.event_type}</div>
+            <h3><a href={`/en/events/${event.slug}/`}>{event.data.title}</a></h3>
+            <p class="card-meta">
+              <span>{event.data.event_date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
+              <span>•</span>
+              <span>{event.data.location_name}</span>
+            </p>
+            <p>{event.data.description}</p>
+            <p class="event-price">
+              {event.data.price === 0 ? 'Free' : `$${event.data.price}`}
+            </p>
+          </article>
+        ))}
+      </div>
+      <p class="section-link">
+        <a href="/en/events/">View all events →</a>
+      </p>
+    </section>
+  )}
+</BaseLayout>
+
+<style>
+  .hero {
+    text-align: center;
+    padding: 4rem 0;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+    color: white;
+    border-radius: 12px;
+    margin-bottom: 3rem;
+  }
+
+  .hero h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.25rem;
+    max-width: 600px;
+    margin: 0 auto 2rem;
+    opacity: 0.9;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+
+  .btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: transform 0.2s;
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+    text-decoration: none;
+  }
+
+  .btn-primary {
+    background: var(--color-secondary);
+    color: var(--color-primary);
+  }
+
+  .btn-secondary {
+    background: white;
+    color: var(--color-primary);
+  }
+
+  .featured-section {
+    margin-bottom: 3rem;
+  }
+
+  .featured-section h2 {
+    margin-bottom: 1.5rem;
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .card-grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .card {
+    background: white;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    position: relative;
+  }
+
+  .card-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: var(--color-primary);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .card h3 {
+    margin-bottom: 0.5rem;
+    padding-right: 5rem;
+  }
+
+  .card h3 a {
+    color: var(--color-text);
+  }
+
+  .card h3 a:hover {
+    color: var(--color-primary);
+  }
+
+  .card-meta {
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+    margin-bottom: 0.75rem;
+  }
+
+  .card-meta span {
+    margin-right: 0.5rem;
+  }
+
+  .price {
+    font-weight: 600;
+    color: var(--color-primary);
+  }
+
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .tag {
+    background: var(--color-background);
+    border: 1px solid var(--color-border);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+  }
+
+  .event-price {
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-top: 0.5rem;
+  }
+
+  .section-link {
+    margin-top: 1.5rem;
+    text-align: center;
+  }
+
+  .section-link a {
+    font-weight: 500;
+  }
+
+  @media (max-width: 768px) {
+    .card-grid, .card-grid-2 {
+      grid-template-columns: 1fr;
+    }
+
+    .hero h1 {
+      font-size: 2rem;
+    }
+
+    .hero-actions {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+</style>

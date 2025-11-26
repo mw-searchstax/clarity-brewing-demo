@@ -1,0 +1,214 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const products = await getCollection('products');
+const sortedProducts = products.sort((a, b) => b.data.rating - a.data.rating);
+
+// Get unique styles for filtering
+const styles = [...new Set(products.map(p => p.data.style))].sort();
+---
+
+<BaseLayout title="Our Beers" description="Explore our complete lineup of non-alcoholic craft beers. From crisp lagers to bold stouts, find your perfect NA beer.">
+  <h1>Our Beers</h1>
+  <p class="page-intro">
+    Explore our complete lineup of non-alcoholic craft beers. Each one brewed with the same
+    care and quality as the best craft beers - just without the alcohol.
+  </p>
+
+  <div class="filter-bar">
+    <strong>Filter by style:</strong>
+    <div class="filter-tags">
+      <button class="filter-tag active" data-style="all">All</button>
+      {styles.map(style => (
+        <button class="filter-tag" data-style={style}>{style}</button>
+      ))}
+    </div>
+  </div>
+
+  <div class="products-grid">
+    {sortedProducts.map(product => (
+      <article class="product-card" data-style={product.data.style}>
+        <div class="product-header">
+          <span class="product-style">{product.data.style}</span>
+          <span class="product-rating">★ {product.data.rating}</span>
+        </div>
+        <h2><a href={`/en/products/${product.slug}/`}>{product.data.title}</a></h2>
+        <div class="product-stats">
+          <span>{product.data.abv}% ABV</span>
+          <span>{product.data.calories} cal</span>
+          <span class="product-price">${product.data.price}</span>
+        </div>
+        <p>{product.data.description}</p>
+        <div class="flavor-tags">
+          {product.data.flavor_profile.map(flavor => (
+            <span class="flavor-tag">{flavor}</span>
+          ))}
+        </div>
+        {!product.data.available && (
+          <p class="out-of-stock">Currently unavailable</p>
+        )}
+      </article>
+    ))}
+  </div>
+</BaseLayout>
+
+<style>
+  .page-intro {
+    font-size: 1.125rem;
+    color: var(--color-text-light);
+    max-width: 700px;
+    margin-bottom: 2rem;
+  }
+
+  .filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+  }
+
+  .filter-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .filter-tag {
+    background: var(--color-background);
+    border: 1px solid var(--color-border);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+  }
+
+  .filter-tag:hover {
+    border-color: var(--color-primary);
+  }
+
+  .filter-tag.active {
+    background: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+  }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .product-card {
+    background: white;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 1.5rem;
+  }
+
+  .product-card.hidden {
+    display: none;
+  }
+
+  .product-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+
+  .product-style {
+    background: var(--color-primary);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .product-rating {
+    color: var(--color-secondary);
+    font-weight: 600;
+  }
+
+  .product-card h2 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .product-card h2 a {
+    color: var(--color-text);
+  }
+
+  .product-card h2 a:hover {
+    color: var(--color-primary);
+  }
+
+  .product-stats {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+    margin-bottom: 0.75rem;
+  }
+
+  .product-price {
+    font-weight: 600;
+    color: var(--color-primary);
+  }
+
+  .flavor-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .flavor-tag {
+    background: var(--color-background);
+    border: 1px solid var(--color-border);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+  }
+
+  .out-of-stock {
+    color: #c00;
+    font-weight: 500;
+    margin-top: 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .filter-bar {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>
+
+<script>
+  // Simple client-side filtering
+  document.querySelectorAll('.filter-tag').forEach(button => {
+    button.addEventListener('click', () => {
+      const style = button.dataset.style;
+
+      // Update active state
+      document.querySelectorAll('.filter-tag').forEach(b => b.classList.remove('active'));
+      button.classList.add('active');
+
+      // Filter products
+      document.querySelectorAll('.product-card').forEach(card => {
+        if (style === 'all' || card.dataset.style === style) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    });
+  });
+</script>

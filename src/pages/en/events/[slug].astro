@@ -1,0 +1,259 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const events = await getCollection('events');
+  return events.map(event => ({
+    params: { slug: event.slug },
+    props: { event },
+  }));
+}
+
+const { event } = Astro.props;
+const { Content } = await event.render();
+
+const isPast = event.data.event_date < new Date();
+---
+
+<BaseLayout title={event.data.title} description={event.data.description}>
+  <article class="event-detail">
+    <header class="event-header">
+      <a href="/en/events/" class="back-link">← Back to all events</a>
+
+      {isPast && (
+        <div class="past-notice">This event has ended</div>
+      )}
+
+      <div class="event-meta">
+        <span class="event-type">{event.data.event_type}</span>
+      </div>
+
+      <h1>{event.data.title}</h1>
+
+      <div class="event-info-grid">
+        <div class="event-info-item">
+          <span class="info-icon">📅</span>
+          <div>
+            <strong>Date</strong>
+            <p>
+              {event.data.event_date.toLocaleDateString('en-US', {
+                weekday: 'long',
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric'
+              })}
+              {event.data.end_date && event.data.end_date > event.data.event_date && (
+                <span> – {event.data.end_date.toLocaleDateString('en-US', {
+                  weekday: 'long',
+                  month: 'long',
+                  day: 'numeric'
+                })}</span>
+              )}
+            </p>
+          </div>
+        </div>
+
+        <div class="event-info-item">
+          <span class="info-icon">📍</span>
+          <div>
+            <strong>Location</strong>
+            <p>{event.data.location_name}</p>
+          </div>
+        </div>
+
+        <div class="event-info-item">
+          <span class="info-icon">💰</span>
+          <div>
+            <strong>Price</strong>
+            <p>{event.data.price === 0 ? 'Free' : `$${event.data.price}`}</p>
+          </div>
+        </div>
+
+        <div class="event-info-item">
+          <span class="info-icon">👥</span>
+          <div>
+            <strong>Capacity</strong>
+            <p>{event.data.capacity} guests</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="event-content">
+      <Content />
+    </div>
+
+    {!isPast && (
+      <div class="event-cta">
+        <p>Ready to join us?</p>
+        <button class="btn btn-primary" disabled>
+          Registration Coming Soon
+        </button>
+        <p class="cta-note">
+          Sign up for our newsletter to be notified when registration opens.
+        </p>
+      </div>
+    )}
+  </article>
+</BaseLayout>
+
+<style>
+  .event-detail {
+    max-width: 800px;
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    color: var(--color-text-light);
+  }
+
+  .back-link:hover {
+    color: var(--color-primary);
+  }
+
+  .past-notice {
+    background: #f0f0f0;
+    color: var(--color-text-light);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+  }
+
+  .event-header {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .event-meta {
+    margin-bottom: 1rem;
+  }
+
+  .event-type {
+    background: var(--color-secondary);
+    color: var(--color-primary);
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .event-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .event-info-item {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .info-icon {
+    font-size: 1.5rem;
+  }
+
+  .event-info-item strong {
+    display: block;
+    color: var(--color-text-light);
+    font-size: 0.875rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .event-info-item p {
+    margin: 0;
+    font-weight: 500;
+  }
+
+  .event-content {
+    line-height: 1.8;
+  }
+
+  .event-content :global(h2) {
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--color-primary);
+  }
+
+  .event-content :global(h3) {
+    margin-top: 1.5rem;
+  }
+
+  .event-content :global(ul),
+  .event-content :global(ol) {
+    margin-left: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .event-content :global(li) {
+    margin-bottom: 0.5rem;
+  }
+
+  .event-content :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+  }
+
+  .event-content :global(th),
+  .event-content :global(td) {
+    padding: 0.75rem;
+    text-align: left;
+    border: 1px solid var(--color-border);
+  }
+
+  .event-content :global(th) {
+    background: var(--color-background);
+    font-weight: 600;
+  }
+
+  .event-cta {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: var(--color-primary);
+    color: white;
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  .event-cta p {
+    margin-bottom: 1rem;
+  }
+
+  .btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+
+  .btn-primary {
+    background: var(--color-secondary);
+    color: var(--color-primary);
+  }
+
+  .btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  .cta-note {
+    font-size: 0.875rem;
+    opacity: 0.8;
+    margin-top: 1rem;
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 600px) {
+    .event-info-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

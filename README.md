@@ -14,21 +14,21 @@ npm run dev
 
 This is a fictional non-alcoholic brewery website designed to exercise ~80% of Site Search features:
 
-- **Multi-language support** (EN now, ES/DE/ZH_CN in Phase 4)
+- **Multi-language support** (EN now, ES/DE/ZH_CN in Phase 6)
 - **Multiple content types** for faceted search
 - **Crawler + Ingest API** data sources
 - **Search profiles** for different sections
 - **Geo search** for store locator
 
-## Current Status: Phase 2 Complete ✅
+## Current Status: Phase 4 Complete ✅
 
 ### What's Built
 
 | Content Type | Count | Location |
 |--------------|-------|----------|
-| Products (beers) | 5 | `src/content/products/` |
-| Articles | 5 | `src/content/articles/` |
-| Events | 3 | `src/content/events/` |
+| Products (beers) | 13 | `src/content/products/` |
+| Articles | 13 | `src/content/articles/` |
+| Events | 11 | `src/content/events/` |
 
 ### Pages
 
@@ -64,17 +64,24 @@ PUBLIC_SEARCHSTAX_TRACK_KEY=your-tracking-key
 
 ---
 
-## Phase 3: Refinements (TODO)
+## Phase 3: Search Page Polish ✅
 
-- [ ] Configure facets in SearchStax dashboard
-- [ ] Polish search page CSS styling
-- [ ] Hide empty facets sidebar
-- [ ] Set up search profiles (products, articles, events)
-- [ ] Configure Smart Answers
+- [x] Polish search page CSS styling (overrode SearchStax orange with site green)
+- [x] Hide empty facets sidebar when no facets available
 
 ---
 
-## Phase 4: Ingest API
+## Phase 4: Expand Content ✅
+
+- [x] Add more products (8 new beers, total 13)
+- [x] Add more articles (8 new articles, total 13)
+- [x] Add more events (8 new events, total 11)
+
+See `docs/plans/2025-11-26-phase4-content-expansion-design.md` for design details.
+
+---
+
+## Phase 5: Ingest API Scripts
 
 Add Python scripts for supplemental data (locations not on website):
 
@@ -97,7 +104,7 @@ scripts/
 
 ---
 
-## Phase 5: Multilingual
+## Phase 6: Multilingual
 
 Add languages to `astro.config.mjs`:
 
@@ -115,13 +122,17 @@ Create translated content in `src/content/*/` directories with language-specific
 
 ---
 
-## Phase 6: Advanced Features
+## Phase 7: SearchStax Configuration (Dashboard)
 
-- Smart Answers configuration
-- Promotions and merchandising
-- Related searches
-- Custom synonyms and stopwords
-- Analytics tracking
+All dashboard configuration work:
+
+- [ ] Configure facets in SearchStax dashboard
+- [ ] Set up search profiles (products, articles, events)
+- [ ] Configure Smart Answers
+- [ ] Promotions and merchandising
+- [ ] Related searches
+- [ ] Custom synonyms and stopwords
+- [ ] Analytics tracking
 
 ---
 

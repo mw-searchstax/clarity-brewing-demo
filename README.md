@@ -20,7 +20,7 @@ This is a fictional non-alcoholic brewery website designed to exercise ~80% of S
 - **Search profiles** for different sections
 - **Geo search** for store locator
 
-## Current Status: Phase 1 Complete ✅
+## Current Status: Phase 2 Complete ✅
 
 ### What's Built
 
@@ -39,80 +39,15 @@ This is a fictional non-alcoholic brewery website designed to exercise ~80% of S
 - `/en/articles/[slug]/` - Article detail pages
 - `/en/events/` - Event listings (upcoming/past)
 - `/en/events/[slug]/` - Event detail pages
-- `/en/search/` - Placeholder for SearchStax integration
+- `/en/search/` - SearchStax Site Search integration
 
----
+### Search Integration (Phase 2) ✅
 
-## Phase 2: Search Integration
+- **Deployed to**: [clarity-brewing-demo.pages.dev](https://clarity-brewing-demo.pages.dev/en/)
+- **Search SDK**: `@searchstax-inc/searchstudio-ux-js` (vanilla JS)
+- **Widgets**: Search input, results, facets, pagination, sorting
 
-### Prerequisites
-
-1. Create a Site Search App at [searchstax.com](https://www.searchstax.com)
-2. Deploy this site to Cloudflare Pages (or similar)
-3. Configure the crawler to index the deployed site
-
-### Implementation Steps
-
-#### 1. Install SearchStax UI Kit
-
-```bash
-npm install @searchstax-inc/searchstudio-ux-react
-```
-
-#### 2. Get API Credentials
-
-From Site Search dashboard:
-- **Search URL**: `https://{app-id}.searchstax.com/solr/{collection}/emselect`
-- **Suggest URL**: `https://{app-id}.searchstax.com/solr/{collection}/emsuggest`
-- **Read-Only Token**: From App Settings > All APIs > Search & Indexing
-- **Tracking API Key**: From App Settings > All APIs > Analytics
-
-#### 3. Create Search Component
-
-Create `src/components/SearchInterface.tsx`:
-
-```tsx
-import {
-  SearchstaxWrapper,
-  SearchstaxInputWidget,
-  SearchstaxResultWidget,
-  SearchstaxFacetsWidget,
-  SearchstaxPaginationWidget,
-  SearchstaxSortingWidget,
-} from '@searchstax-inc/searchstudio-ux-react';
-import '@searchstax-inc/searchstudio-ux-react/dist/styles/mainTheme.css';
-
-const config = {
-  searchURL: import.meta.env.PUBLIC_SEARCHSTAX_SEARCH_URL,
-  suggesterURL: import.meta.env.PUBLIC_SEARCHSTAX_SUGGEST_URL,
-  searchAuth: import.meta.env.PUBLIC_SEARCHSTAX_TOKEN,
-  trackApiKey: import.meta.env.PUBLIC_SEARCHSTAX_TRACK_KEY,
-  authType: 'token',
-  language: 'en',
-};
-
-export default function SearchInterface() {
-  return (
-    <SearchstaxWrapper config={config}>
-      <SearchstaxInputWidget />
-      <div className="search-layout">
-        <aside className="search-sidebar">
-          <SearchstaxFacetsWidget />
-        </aside>
-        <main className="search-results">
-          <SearchstaxSortingWidget />
-          <SearchstaxResultWidget />
-          <SearchstaxPaginationWidget />
-        </main>
-      </div>
-    </SearchstaxWrapper>
-  );
-}
-```
-
-#### 4. Create Environment File
-
-Create `.env`:
+#### Environment Variables (Cloudflare Pages)
 
 ```env
 PUBLIC_SEARCHSTAX_SEARCH_URL=https://your-app.searchstax.com/solr/collection/emselect
@@ -121,36 +56,25 @@ PUBLIC_SEARCHSTAX_TOKEN=your-read-only-token
 PUBLIC_SEARCHSTAX_TRACK_KEY=your-tracking-key
 ```
 
-#### 5. Update Search Page
+#### Notes
 
-Update `src/pages/en/search.astro` to use the React component:
-
-```astro
----
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import SearchInterface from '../../components/SearchInterface.tsx';
----
-
-<BaseLayout title="Search">
-  <h1>Search</h1>
-  <SearchInterface client:load />
-</BaseLayout>
-```
-
-#### 6. Configure Search Profiles
-
-In Site Search dashboard, create profiles:
-
-| Profile | Data Filter | Purpose |
-|---------|-------------|---------|
-| Default | (none) | Global search |
-| Products | `content_type:product` | Beer catalog |
-| Articles | `content_type:article` | Knowledge base |
-| Events | `content_type:event` | Event finder |
+- Using vanilla JS package instead of React wrapper due to React 19 compatibility issues
+- CSS copied to `public/searchstax.css` (package doesn't export styles)
+- Facets will populate once configured in SearchStax dashboard
 
 ---
 
-## Phase 3: Ingest API
+## Phase 3: Refinements (TODO)
+
+- [ ] Configure facets in SearchStax dashboard
+- [ ] Polish search page CSS styling
+- [ ] Hide empty facets sidebar
+- [ ] Set up search profiles (products, articles, events)
+- [ ] Configure Smart Answers
+
+---
+
+## Phase 4: Ingest API
 
 Add Python scripts for supplemental data (locations not on website):
 
@@ -173,7 +97,7 @@ scripts/
 
 ---
 
-## Phase 4: Multilingual
+## Phase 5: Multilingual
 
 Add languages to `astro.config.mjs`:
 
@@ -191,7 +115,7 @@ Create translated content in `src/content/*/` directories with language-specific
 
 ---
 
-## Phase 5: Advanced Features
+## Phase 6: Advanced Features
 
 - Smart Answers configuration
 - Promotions and merchandising

@@ -61,12 +61,13 @@ const trackKey = import.meta.env.PUBLIC_SEARCHSTAX_TRACK_KEY;
 </style>
 
 <link rel="stylesheet" href="https://static.searchstax.com/studio-js/v4/css/search-ux.css" />
-<script is:inline src="https://static.searchstax.com/studio-js/v4/js/search-ux.js"></script>
 
 <script is:inline define:vars={{ searchURL, suggestURL, token, trackKey }}>
-  document.addEventListener('DOMContentLoaded', function() {
-    if (typeof SearchstaxSDK === 'undefined') {
-      console.error('SearchStax SDK not loaded');
+  function initSearchStax() {
+    if (!searchURL) {
+      console.error('SearchStax: Missing configuration. Set PUBLIC_SEARCHSTAX_* env variables.');
+      document.getElementById('searchstax-input-container').innerHTML =
+        '<p style="color: #666; padding: 1rem;">Search is being configured...</p>';
       return;
     }
 
@@ -101,5 +102,14 @@ const trackKey = import.meta.env.PUBLIC_SEARCHSTAX_TRACK_KEY;
     searchstax.renderSortingWidget({
       containerSelector: '#searchstax-sorting-container'
     });
-  });
+  }
+
+  // Load SDK script dynamically to ensure proper ordering
+  const script = document.createElement('script');
+  script.src = 'https://static.searchstax.com/studio-js/v4/js/search-ux.js';
+  script.onload = initSearchStax;
+  script.onerror = function() {
+    console.error('Failed to load SearchStax SDK');
+  };
+  document.head.appendChild(script);
 </script>
